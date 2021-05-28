@@ -11,7 +11,7 @@ html {
 
 h1 {
 	text-align: center;
-	margin: 30px;
+	margin: 60px auto;
 	font-size: 4rem;
 	color: aliceblue;
 }
@@ -28,7 +28,7 @@ h2 {
 	width: 80%;
 	min-width: 300px;
 	height: 300px;
-	margin: 0 auto 30px;
+	margin: 0 auto 60px;
 }
 
 .button {
@@ -58,21 +58,21 @@ h2 {
 	border-radius: 0 0 150px 0;
 }
 
-/* .light-green {
-	background-color: rgb(49, 173, 49);
+.light-green {
+	background-color: rgb(103, 223, 103);
 }
 
 .light-red {
-	background-color: rgb(248, 50, 50);
+	background-color: rgb(250, 103, 103);
 }
 
 .light-yellow {
-	background-color: rgb(245, 245, 70);
+	background-color: rgb(247, 247, 120);
 }
 
 .light-blue {
-	background-color: rgb(57, 57, 255);
-} */
+	background-color: rgb(113, 113, 255);
+}
 
 .start-button {
 	position: absolute;
