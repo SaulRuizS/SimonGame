@@ -8,6 +8,8 @@ const blueBtn = document.getElementById('blue-button')
 const levelDisplay = document.getElementById('level-display')
 const level = document.getElementById('level')
 
+const maxSequenceLevel = 5
+
 function startGame() {
     window.NewGame = new Simon()
 }
@@ -16,8 +18,7 @@ class Simon {
     constructor() {
         this.start()
         this.generateSequence()
-        this.nextLevel()
-        this.colorsClickRegister()
+        setTimeout(this.nextLevel, 500) //Using parenthesis executes the function at the moment
     }
 
     start() {
@@ -27,6 +28,7 @@ class Simon {
         if (gameStarted === false) {
             levelDisplay.hidden = false
         }
+        this.nextLevel = this.nextLevel.bind(this)
         this.colorChoosed = this.colorChoosed.bind(this)
         this.currentLevel = 1
         this.colorButtons = {
@@ -38,7 +40,6 @@ class Simon {
     }
 
     generateSequence() {
-        let maxSequenceLevel = 10
         this.sequence = new Array(maxSequenceLevel)
             .fill(0)
             .map(
@@ -49,6 +50,7 @@ class Simon {
     }
 
     nextLevel() {
+        this.colorSequenceIterator = 0
         this.lightSequence()
         this.addClickEvent()
     }
@@ -63,6 +65,19 @@ class Simon {
                 return 'yellowBtn'
             case 3:
                 return 'blueBtn'
+        }
+    }
+
+    colorToNumber(color) {
+        switch (color) {
+            case 'greenBtn':
+                return 0
+            case 'redBtn':
+                return 1
+            case 'yellowBtn':
+                return 2
+            case 'blueBtn':
+                return 3
         }
     }
 
@@ -93,46 +108,45 @@ class Simon {
         this.colorButtons.blueBtn.addEventListener('click', this.colorChoosed)
     }
 
-    colorChoosed(ev) {
-        if (
-            this.colorButtons.greenBtn
-        ) {
-            this.colorsClickRegister()
+    removeClickEvent() {
+        this.colorButtons.greenBtn.removeEventListener('click', this.colorChoosed)
+        this.colorButtons.redBtn.removeEventListener('click', this.colorChoosed)
+        this.colorButtons.yellowBtn.removeEventListener('click', this.colorChoosed)
+        this.colorButtons.blueBtn.removeEventListener('click', this.colorChoosed)
+    }
+
+    levelEvaluation(colorNumber) {
+        if (colorNumber === this.sequence[this.colorSequenceIterator]) {
+            this.colorSequenceIterator++
+            if (this.colorSequenceIterator === this.currentLevel) {
+                this.currentLevel++
+                this.removeClickEvent()
+                this.colorSequenceIterator = 0
+                if (this.currentLevel === maxSequenceLevel + 1) {
+                    levelDisplay.innerHTML = 'Congratulations. You won!'
+                    setTimeout(
+                        () => location.reload(), 2000
+                    )
+                } else {
+                    setTimeout(
+                        () => {
+                            level.innerHTML = this.currentLevel
+                            this.nextLevel()
+                        }, 1000)
+                }
+            }
+        } else {
+            levelDisplay.innerHTML = 'Wrong selection. Start again.'
+            setTimeout(
+                () => location.reload(), 1500
+            )
         }
-        //console.log(ev)
     }
 
-    colorsClickRegister(colorInput) {
-        this.colorsClicksSequence = []
-        this.colorsClicksCheck()
+    colorChoosed(ev) {
+        const colorName = ev.target.dataset.color
+        const colorNumber = this.colorToNumber(colorName)
+        this.lightColor(colorName)
+        this.levelEvaluation(colorNumber)
     }
-
-    colorsClicksCheck() {
-
-    }
-
 }
-
-        // for (let btn = 0; btn < 4; btn++) {
-        //     if (this.sequence[btn] === 0) {
-        //         greenBtn.classList.add('light')
-        //     }
-        //     else if (this.sequence[btn] === 1) {
-        //         redBtn.classList.add('light')
-        //     }
-        //     else if (this.sequence[btn] === 2) {
-        //         yellowBtn.classList.add('light')
-        //     }
-        //     else if (this.sequence[btn] === 3) {
-        //         blueBtn.classList.add('light')
-        //     }
-        //     //debugger
-        //     setTimeout(
-        //         () => {
-        //             greenBtn.classList.remove('light-green')
-        //             redBtn.classList.remove('light-red')
-        //             yellowBtn.classList.remove('light-yellow')
-        //             blueBtn.classList.remove('light-blue')
-        //         }, 1000
-        //     )
-        // }
