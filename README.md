@@ -1,5 +1,5 @@
 # SimonGame
-Basic Simon game build with JavaScript.
+Basic Simon game built in JavaScript.
 
 ## Usage
 
